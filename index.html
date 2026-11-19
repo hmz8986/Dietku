@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173b35">
+<link rel="manifest" href="manifest.webmanifest">
+<title>DietTrack Hafiz</title>
+<style>
+:root{--bg:#f3f6f3;--card:#fff;--ink:#18332e;--muted:#71817b;--green:#1f765c;--mint:#dff2e8;--line:#e4ebe6;--orange:#f3a64a;--red:#c94b4b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:#173b35;color:white;padding:22px 18px 25px;border-radius:0 0 25px 25px}
+.wrap{max-width:760px;margin:auto;padding:0 14px 30px}
+.top{display:flex;justify-content:space-between;align-items:center}.brand{font-size:20px;font-weight:800;letter-spacing:.2px}.date{font-size:12px;color:#c5ddd3}
+h1{font-size:25px;margin:18px 0 4px}.sub{color:#c5ddd3;font-size:13px}
+main{margin-top:-12px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 4px 16px #173b3508}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.muted{color:var(--muted);font-size:12px}.big{font-size:30px;font-weight:800;letter-spacing:-1px}.bar{height:9px;background:#e9efeb;border-radius:20px;overflow:hidden;margin:9px 0}.fill{height:100%;background:var(--green);border-radius:20px;width:0}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.metric{background:#f6f9f6;border-radius:13px;padding:11px}.metric b{display:block;font-size:16px;margin-top:3px}
+h2{font-size:17px;margin:0 0 12px}.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:14px 0}.tab{border:0;border-radius:12px;padding:10px 4px;background:#e7eee9;color:#35564d;font-weight:650;font-size:12px}.tab.active{background:#1f765c;color:#fff}
+button,.btn{border:0;border-radius:11px;background:var(--green);color:#fff;padding:11px 14px;font-weight:700;cursor:pointer}.secondary{background:#e8f2ec;color:#245b49}.danger{background:#fff0ef;color:#a83d3d}.full{width:100%}
+input,select{width:100%;padding:11px;border:1px solid #dbe5de;border-radius:10px;background:#fff;color:var(--ink);font:inherit;margin:5px 0 10px}
+label{font-size:12px;color:var(--muted);font-weight:650} .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.foodrow{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.foodrow:last-child{border:0}
+.pill{font-size:11px;background:var(--mint);color:#22624d;padding:5px 8px;border-radius:20px;white-space:nowrap}
+.logitem{padding:10px 0;border-bottom:1px solid var(--line)}.logitem:last-child{border:0}
+.navdate{display:flex;align-items:center;justify-content:space-between;gap:8px}.navdate button{padding:7px 12px}
+.hidden{display:none!important}.notice{background:#fff7e9;border:1px solid #f5dfb7;color:#76501b;padding:11px;border-radius:12px;font-size:12px;line-height:1.5}
+.smallbtn{padding:6px 9px;font-size:11px}.empty{color:var(--muted);font-size:13px;padding:12px 0}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:18px}
+@media(max-width:420px){.grid{gap:6px}.metric{padding:9px}.metric b{font-size:14px}.tabs{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+ <div class="top"><div class="brand">🥗 DietTrack</div><div class="date" id="todayLabel"></div></div>
+ <h1>Pantau diet harian</h1><div class="sub">Rekod makanan, aktiviti dan kemajuan badan anda.</div>
+</div></header>
+<div class="wrap"><main>
+ <div class="navdate card"><button class="secondary" id="prevDay">‹</button><b id="dateTitle">Hari ini</b><button class="secondary" id="nextDay">›</button></div>
+ <section id="dashboard">
+  <div class="card">
+   <div class="row"><div><div class="muted">Kalori diambil</div><div class="big"><span id="kcal">0</span> <span class="muted">kcal</span></div></div><div class="pill" id="kcalPct">0% sasaran</div></div>
+   <div class="bar"><div class="fill" id="kcalBar"></div></div>
+   <div class="grid">
+    <div class="metric"><span class="muted">Protein</span><b><span id="protein">0</span> g</b><span class="muted" id="proteinGoal">/ 110 g</span></div>
+    <div class="metric"><span class="muted">Karbo</span><b><span id="carbs">0</span> g</b><span class="muted" id="carbGoal">/ 170 g</span></div>
+    <div class="metric"><span class="muted">Lemak</span><b><span id="fat">0</span> g</b><span class="muted" id="fatGoal">/ 60 g</span></div>
+   </div>
+  </div>
+  <div class="card">
+   <div class="row"><h2>Berat badan</h2><span class="pill">Sasaran 69 kg</span></div>
+   <div class="row"><div><div class="big" id="currentWeight">74.0 kg</div><div class="muted">Rekod terkini</div></div><div><div class="big" id="weightLeft">5.0 kg</div><div class="muted">Untuk capai sasaran</div></div></div>
+   <div class="bar"><div class="fill" id="weightBar"></div></div>
+  </div>
+  <div class="card">
+   <h2>Air kosong</h2><div class="row"><div><span class="big" id="water">0</span><span class="muted"> / 8 gelas</span></div><div><button class="secondary" id="waterMinus">−</button> <button id="waterPlus">+ 1 gelas</button></div></div>
+  </div>
+  <div class="card"><h2>Ringkasan aktiviti</h2><div id="activitySummary" class="empty">Belum ada aktiviti direkodkan.</div></div>
+  <div class="card"><h2>Rekod makanan hari ini</h2><div id="todayMeals" class="empty">Belum ada makanan direkodkan.</div><button class="full" onclick="showTab('food')">＋ Tambah makanan</button></div>
+ </section>
+ <div class="tabs">
+  <button class="tab active" data-tab="dashboard">Utama</button><button class="tab" data-tab="food">Makanan</button><button class="tab" data-tab="progress">Kemajuan</button><button class="tab" data-tab="settings">Tetapan</button>
+ </div>
+ <section id="food" class="hidden">
+  <div class="card">
+   <h2>Tambah makanan</h2>
+   <label>Tarikh</label><input type="date" id="foodDate">
+   <label>Waktu makan</label><select id="mealType"><option>Sarapan</option><option>Makan tengah hari</option><option>Makan malam</option><option>Snek</option></select>
+   <label>Pilih makanan</label><select id="foodSelect"></select>
+   <div class="formgrid"><div><label>Kuantiti (gram)</label><input type="number" id="grams" min="1" value="100"></div><div><label>Kalori anggaran</label><input id="foodKcal" disabled></div></div>
+   <div class="muted" id="foodMacros">Protein 0g · Karbo 0g · Lemak 0g bagi kuantiti dipilih.</div>
+   <button class="full" id="addFood">Tambah ke rekod</button>
+  </div>
+  <div class="card"><h2>Senarai makanan</h2><input id="foodSearch" placeholder="Cari nasi, telur, kentang..."><div id="foodList"></div></div>
+ </section>
+ <section id="progress" class="hidden">
+  <div class="card"><h2>Rekod berat dan pinggang</h2><label>Tarikh</label><input type="date" id="measureDate"><div class="formgrid"><div><label>Berat (kg)</label><input type="number" step=".1" id="weightInput" placeholder="74.0"></div><div><label>Pinggang (cm)</label><input type="number" step=".5" id="waistInput" placeholder="Contoh 87"></div></div><button class="full" id="saveMeasure">Simpan ukuran</button><div id="measureList"></div></div>
+  <div class="card"><h2>Bacaan gula darah</h2><label>Tarikh dan masa</label><input type="datetime-local" id="glucoseDate"><div class="formgrid"><div><label>Bacaan (mmol/L)</label><input type="number" step=".1" id="glucoseValue" placeholder="Contoh 5.5"></div><div><label>Jenis bacaan</label><select id="glucoseType"><option>Puasa</option><option>Sebelum makan</option><option>2 jam selepas makan</option><option>Rawak</option></select></div></div><button class="full" id="saveGlucose">Simpan bacaan</button><div id="glucoseList"></div></div>
+  <div class="card"><h2>Aktiviti fizikal</h2><label>Tarikh</label><input type="date" id="activityDate"><div class="formgrid"><div><label>Aktiviti</label><select id="activityType"><option>Joging</option><option>Berjalan</option><option>Berbasikal</option><option>Senaman kekuatan</option><option>Lain-lain</option></select></div><div><label>Jarak (km)</label><input type="number" step=".1" id="distance" placeholder="5"></div><div><label>Tempoh (minit)</label><input type="number" id="duration" placeholder="40"></div><div><label>Nota</label><input id="activityNote" placeholder="Contoh: santai"></div></div><button class="full" id="saveActivity">Simpan aktiviti</button></div>
+ </section>
+ <section id="settings" class="hidden">
+  <div class="card"><h2>Sasaran harian</h2><div class="formgrid"><div><label>Kalori (kcal)</label><input type="number" id="goalKcal"></div><div><label>Protein (g)</label><input type="number" id="goalProtein"></div><div><label>Karbohidrat (g)</label><input type="number" id="goalCarbs"></div><div><label>Lemak (g)</label><input type="number" id="goalFat"></div><div><label>Berat sasaran (kg)</label><input type="number" step=".1" id="goalWeight"></div><div><label>Air (gelas)</label><input type="number" id="goalWater"></div></div><button class="full" id="saveGoals">Simpan sasaran</button></div>
+  <div class="card"><h2>Profil permulaan</h2><p class="muted">Berat 74 kg · Tinggi 165 cm · Sasaran awal 69 kg. Nilai sasaran pemakanan ialah anggaran awal dan boleh diubah.</p><div class="notice">Aplikasi ini untuk pemantauan umum, bukan diagnosis atau rawatan. HbA1c 5.9% berada dalam julat pradiabetes mengikut kriteria lazim. Bincang keputusan dan sasaran ujian dengan doktor. Nilai gula darah bergantung pada masa dan keadaan ujian.</div></div>
+  <div class="card"><h2>Data dan privasi</h2><p class="muted">Rekod disimpan pada pelayar telefon ini sahaja. Data tidak dihantar ke pelayan. Kosongkan data pelayar boleh memadam rekod.</p><button class="danger full" id="exportData">Eksport sandaran JSON</button><br><br><button class="danger full" id="clearData">Padam semua rekod</button></div>
+ </section>
+</main><footer>DietTrack Hafiz · Versi 1.0 · Data disimpan pada peranti anda</footer></div>
+<script>
+const foods=[
+["Nasi putih masak",130,2.7,28.2,.3],["Nasi perang masak",123,2.7,25.6,1],["Oat kering",389,16.9,66.3,6.9],["Roti gandum penuh",247,13,41,4.2],["Kentang rebus",87,1.9,20.1,.1],["Ubi keledek rebus",86,1.6,20.1,.1],["Ubi kayu rebus",160,1.4,38.1,.3],["Jagung rebus",96,3.4,21,1.5],["Bihun masak",109,1.8,25,.2],["Mee kuning masak",138,4.5,25,2.1],["Telur rebus",155,13,1.1,11],["Dada ayam masak",165,31,0,3.6],["Ikan kembung bakar",167,24,0,8],["Ikan salmon masak",206,22,0,12],["Tempe",193,20,9,11],["Tauhu",76,8,1.9,4.8],["Lentil masak",116,9,20,0.4],["Kacang dhal masak",116,9,20,0.4],["Brokoli",34,2.8,6.6,.4],["Bayam",23,2.9,3.6,.4],["Timun",15,.7,3.6,.1],["Kubis",25,1.3,5.8,.1],["Pisang",89,1.1,22.8,.3],["Epal",52,.3,13.8,.2],["Betik",43,.5,10.8,.3],["Yogurt asli tanpa gula",61,3.5,4.7,3.3],["Susu rendah lemak",42,3.4,5,1]
+];
+// repair numeric literal for milk
+foods[foods.length-1]=["Susu rendah lemak",42,3.4,5,1];
+const KEY="diettrack_hafiz_v1";
+let data=JSON.parse(localStorage.getItem(KEY)||'{}');
+data.meals=data.meals||[];data.measures=data.measures||[];data.glucose=data.glucose||[];data.activities=data.activities||[];data.water=data.water||{};data.goals=data.goals||{kcal:1800,protein:110,carbs:170,fat:60,weight:69,water:8};
+let selectedDate=new Date().toISOString().slice(0,10);
+const $=id=>document.getElementById(id);
+const save=()=>localStorage.setItem(KEY,JSON.stringify(data));
+const fmt=n=>Number(n||0).toFixed(1).replace(/\.0$/,'');
+const dayMeals=()=>data.meals.filter(x=>x.date===selectedDate);
+function showTab(t){document.querySelectorAll('main>section').forEach(s=>s.classList.add('hidden'));$(t).classList.remove('hidden');document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));if(t==='progress')renderProgress();}
+window.showTab=showTab;
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+function render(){
+ $('todayLabel').textContent=new Date().toLocaleDateString('ms-MY',{weekday:'short',day:'numeric',month:'short'});
+ $('dateTitle').textContent=new Date(selectedDate+'T12:00:00').toLocaleDateString('ms-MY',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ const ms=dayMeals(),sum=ms.reduce((a,m)=>({k:a.k+m.kcal,p:a.p+m.p,c:a.c+m.c,f:a.f+m.f}),{k:0,p:0,c:0,f:0});
+ $('kcal').textContent=Math.round(sum.k);$('protein').textContent=fmt(sum.p);$('carbs').textContent=fmt(sum.c);$('fat').textContent=fmt(sum.f);
+ const g=data.goals;$('proteinGoal').textContent='/ '+g.protein+' g';$('carbGoal').textContent='/ '+g.carbs+' g';$('fatGoal').textContent='/ '+g.fat+' g';
+ $('kcalPct').textContent=Math.round(sum.k/g.kcal*100)+'% sasaran';$('kcalBar').style.width=Math.min(100,sum.k/g.kcal*100)+'%';
+ const latest=[...data.measures].sort((a,b)=>b.date.localeCompare(a.date))[0];const w=latest?.weight??74;
+ $('currentWeight').textContent=fmt(w)+' kg';$('weightLeft').textContent=fmt(Math.max(0,w-g.weight))+' kg';$('weightBar').style.width=Math.max(0,Math.min(100,(74-w)/(74-g.weight)*100))+'%';
+ const water=data.water[selectedDate]||0;$('water').textContent=water;
+ $('todayMeals').innerHTML=ms.length?ms.map(m=>`<div class="logitem"><div class="row"><b>${m.name}</b><button class="danger smallbtn" onclick="removeMeal('${m.id}')">Padam</button></div><div class="muted">${m.type} · ${m.grams}g · ${Math.round(m.kcal)} kcal · P ${fmt(m.p)}g · K ${fmt(m.c)}g · L ${fmt(m.f)}g</div></div>`).join(''):'Belum ada makanan direkodkan.';
+ const acts=data.activities.filter(a=>a.date===selectedDate);$('activitySummary').innerHTML=acts.length?acts.map(a=>`${a.type}: ${a.distance||0} km · ${a.duration||0} minit ${a.note?'· '+a.note:''}`).join('<br>'):'Belum ada aktiviti direkodkan.';
+}
+window.removeMeal=id=>{data.meals=data.meals.filter(m=>m.id!==id);save();render()};
+$('prevDay').onclick=()=>{selectedDate=shiftDate(selectedDate,-1);setDates();render()};$('nextDay').onclick=()=>{selectedDate=shiftDate(selectedDate,1);setDates();render()};
+function shiftDate(s,n){let d=new Date(s+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function setDates(){['foodDate','measureDate','activityDate'].forEach(id=>$(id).value=selectedDate)}
+function initFood(){
+ $('foodSelect').innerHTML=foods.map((f,i)=>`<option value="${i}">${f[0]} (${f[1]} kcal/100g)</option>`).join('');
+ $('foodSelect').onchange=calcFood;$('grams').oninput=calcFood;$('foodSearch').oninput=renderFoodList;
+ calcFood();renderFoodList();
+}
+function calcFood(){const f=foods[+$('foodSelect').value],g=+$('grams').value||0;const vals=f.slice(1).map(v=>v*g/100);$('foodKcal').value=Math.round(vals[0])+' kcal';$('foodMacros').textContent=`Protein ${fmt(vals[1])}g · Karbo ${fmt(vals[2])}g · Lemak ${fmt(vals[3])}g bagi kuantiti dipilih.`}
+function renderFoodList(){let q=$('foodSearch').value.toLowerCase();$('foodList').innerHTML=foods.filter(f=>f[0].toLowerCase().includes(q)).map(f=>`<div class="foodrow"><div><b>${f[0]}</b><div class="muted">${f[2]}g protein · ${f[3]}g karbo /100g</div></div><span class="pill">${f[1]} kcal</span></div>`).join('')}
+$('addFood').onclick=()=>{const f=foods[+$('foodSelect').value],g=+$('grams').value;if(!(g>0)){alert('Masukkan kuantiti yang sah.');return}const v=f.slice(1).map(x=>x*g/100);data.meals.push({id:Date.now().toString(),date:$('foodDate').value,type:$('mealType').value,name:f[0],grams:g,kcal:v[0],p:v[1],c:v[2],f:v[3]});save();selectedDate=$('foodDate').value;render();alert('Makanan berjaya direkodkan.');showTab('dashboard')};
+$('waterPlus').onclick=()=>{data.water[selectedDate]=(data.water[selectedDate]||0)+1;save();render()};$('waterMinus').onclick=()=>{data.water[selectedDate]=Math.max(0,(data.water[selectedDate]||0)-1);save();render()};
+function renderProgress(){
+ $('measureList').innerHTML=[...data.measures].sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<div class="foodrow"><b>${m.date}</b><span>${m.weight} kg ${m.waist?' · '+m.waist+' cm':''}</span></div>`).join('')||'<div class="empty">Belum ada rekod ukuran.</div>';
+ $('glucoseList').innerHTML=[...data.glucose].sort((a,b)=>b.date.localeCompare(a.date)).map(g=>`<div class="foodrow"><div><b>${g.value} mmol/L</b><div class="muted">${g.date} · ${g.type}</div></div></div>`).join('')||'<div class="empty">Belum ada bacaan gula direkodkan.</div>';
+}
+$('saveMeasure').onclick=()=>{let w=+$('weightInput').value,wa=+$('waistInput').value;if(!(w>0)){alert('Masukkan berat yang sah.');return}data.measures.push({date:$('measureDate').value,weight:w,waist:wa||null});save();render();renderProgress();$('weightInput').value='';$('waistInput').value=''};
+$('saveGlucose').onclick=()=>{let v=+$('glucoseValue').value;if(!(v>0)){alert('Masukkan bacaan yang sah.');return}data.glucose.push({date:$('glucoseDate').value||new Date().toISOString(),value:v,type:$('glucoseType').value});save();renderProgress();$('glucoseValue').value=''};
+$('saveActivity').onclick=()=>{data.activities.push({date:$('activityDate').value,type:$('activityType').value,distance:+$('distance').value||0,duration:+$('duration').value||0,note:$('activityNote').value});save();render();$('distance').value='';$('duration').value='';$('activityNote').value='';alert('Aktiviti disimpan.')};
+function loadGoals(){let g=data.goals;$('goalKcal').value=g.kcal;$('goalProtein').value=g.protein;$('goalCarbs').value=g.carbs;$('goalFat').value=g.fat;$('goalWeight').value=g.weight;$('goalWater').value=g.water}
+$('saveGoals').onclick=()=>{data.goals={kcal:+$('goalKcal').value||1800,protein:+$('goalProtein').value||110,carbs:+$('goalCarbs').value||170,fat:+$('goalFat').value||60,weight:+$('goalWeight').value||69,water:+$('goalWater').value||8};save();render();alert('Sasaran dikemas kini.')};
+$('exportData').onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='diettrack-sandaran.json';a.click();URL.revokeObjectURL(a.href)};
+$('clearData').onclick=()=>{if(confirm('Padam semua rekod diet, ukuran dan bacaan gula? Tindakan ini tidak boleh dibatalkan.')){localStorage.removeItem(KEY);location.reload()}};
+setDates();$('foodDate').value=selectedDate;$('measureDate').value=selectedDate;$('activityDate').value=selectedDate;$('glucoseDate').value=new Date().toISOString().slice(0,16);initFood();loadGoals();render();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
